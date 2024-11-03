@@ -1,48 +1,37 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DriversManagement.API.Models;
-
-[Table("Drivers")]
-public class Driver
+namespace DriversManagement.API.Models
 {
-    [Key] // primary key
-    public int Id { get; set; }
-    [Required]
-    [StringLength(20, ErrorMessage = "Max length is 20")]
-    public string FirstName { get; set; }
-    [Required]
-    public string LastName { get; set; }
+    [Table("Drivers")]
+    public class Driver
+    {
+        [Key] // Primary key
+        public int Id { get; set; }
 
-    [NotMapped] // not add to database
-    public string FullName => FirstName + " " + LastName;
+        [Required]
+        [StringLength(20, ErrorMessage = "Max length is 20")]
+        public string FirstName { get; set; }
 
-    public VehicleCategory Category { get; set; }
-    
-    public int Salary { get; set; }
-    public DateTime DateOfBirth { get; set; }
-    public string? LicenceNumber { get; set; }
+        [Required]
+        public string LastName { get; set; }
+
+        [NotMapped] // Not added to the database
+        public string FullName => $"{FirstName} {LastName}";
+
+        // Foreign key property
+        public int CategoryId { get; set; }
+        
+        // Navigation property
+        public VehicleCategory Category { get; set; }
+        
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+
+        public int Salary { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime DateOfBirth { get; set; }
+
+        public string? LicenceNumber { get; set; }
+    }
 }
-
-
-
-
-
-
-/*class Book
-{
-    public ICollection<Author> Author { get; set; }
-}
-class Author
-{
-    public ICollection<Book> Book { get; set; }
-}*/
-
-
-
-
-
-
-
-
-

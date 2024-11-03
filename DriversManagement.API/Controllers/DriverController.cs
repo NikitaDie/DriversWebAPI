@@ -19,8 +19,8 @@ public class DriverController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<ICollection<DriverDTO>>> GetDrivers(
+    [HttpGet("filtered-by")]
+    public async Task<ActionResult<ICollection<DriverDto>>> GetDrivers(
         [FromQuery] string? firstName,
         [FromQuery] string? lastName,
         [FromQuery] string? licenceNumber,
@@ -34,22 +34,80 @@ public class DriverController : ControllerBase
             LicenceNumber = licenceNumber,
             SearchContext = searchContext
         };
-        return Ok(await _driverService.GetAllDrivers(filter, skip, take));
+        var drivers = await _driverService.GetAllFilteredDrivers(filter, skip, take);
+        return Ok(_mapper.Map<ICollection<DriverDto>>(drivers));
     }
 
-    [HttpGet("vehicles")]
-    public async Task<ActionResult<ICollection<Vehicle>>> GetVehicles(
-        [FromQuery] string? model,
-        [FromQuery] int? year, 
-        [FromQuery] string? driverFirstName)
+    [HttpGet]
+    public async Task<ActionResult<DriverDto>> GetAllDrivers([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
-        return Ok(await _driverService.FilterVehicles(model, year, driverFirstName));
+        var drivers = await _driverService.GetAllDrivers(skip, take);
+        return Ok(_mapper.Map<ICollection<DriverDto>>(drivers));
+    }
+    
+    [HttpGet("by-name")]
+    public async Task<ActionResult<DriverDto>> GetDriverByName([FromQuery] string? firstName, [FromQuery] string? lastName)
+    {
+        if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            return BadRequest("First- and Last- name have to be provided!");
+        
+        var driver = await _driverService.GetDriverByName(firstName, lastName);
+        if (driver == null)
+            return NotFound("Driver not found.");
+
+        return Ok(_mapper.Map<DriverDto>(driver));
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<DriverDto>> GetDriverById(int id)
+    {
+        var driver = await _driverService.GetDriverById(id);
+        if (driver == null)
+            return NotFound("Driver not found.");
+
+        return Ok(_mapper.Map<DriverDto>(driver));
     }
     
     [HttpPost]
-    public ActionResult<Driver> AddDriver(DriverDTO driverDTO)
+    public async Task<ActionResult<DriverDto>> AddDriver(DriverDto driverDTO)
     {
         var driver = _mapper.Map<Driver>(driverDTO);
-        return Ok(driver);
+        var createdDriver = await _driverService.AddDriver(driver);
+        return CreatedAtAction(nameof(GetDriverById), new { id = createdDriver.Id }, _mapper.Map<DriverDto>(createdDriver));
+    }
+    
+    [HttpPatch("{id}/update-name")]
+    public async Task<IActionResult> UpdateName(int id, [FromQuery] string? newFirstName, [FromQuery] string? newLastName)
+    {
+        if (string.IsNullOrEmpty(newFirstName) || string.IsNullOrEmpty(newLastName))
+            return BadRequest("First- and Last- name have to be provided!");
+        
+        var updatedDriver = await _driverService.UpdateDriverName(id, newFirstName, newLastName);
+        if (updatedDriver == null)
+            return NotFound("Driver not found.");
+
+        return Ok(_mapper.Map<DriverDto>(updatedDriver));
+    }
+
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateDriver(int id, DriverDto driverDto)
+    {
+        var driver = _mapper.Map<Driver>(driverDto);
+        var updatedDriver = await _driverService.UpdateDriver(id, driver);
+        if (updatedDriver == null)
+            return NotFound("Driver not found.");
+
+        return Ok(_mapper.Map<DriverDto>(updatedDriver));
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDriver(int id)
+    {
+        var result = await _driverService.DeleteDriver(id);
+        if (!result)
+            return NotFound("Driver not found.");
+
+        return NoContent();
     }
 }

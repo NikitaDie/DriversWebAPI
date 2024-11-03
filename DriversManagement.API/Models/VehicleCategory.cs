@@ -9,3 +9,4 @@ public class VehicleCategory
 
     public ICollection<Driver> Drivers { get; set; }
 }
+

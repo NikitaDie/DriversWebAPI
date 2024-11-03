@@ -1,6 +1,6 @@
 ﻿namespace DriversManagement.API.DTOs;
 
-public class DriverDTO
+public class DriverDto
 {
     public string Name { get; set; }
     public string LastName { get; set; }

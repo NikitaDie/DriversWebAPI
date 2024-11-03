@@ -4,6 +4,7 @@ using DriversManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriversManagement.API.Migrations
 {
     [DbContext(typeof(DriversContext))]
-    partial class DriversContextModelSnapshot : ModelSnapshot
+    [Migration("20241103180028_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,7 +120,7 @@ namespace DriversManagement.API.Migrations
                             Engine = "V6",
                             FuelCapacity = 0,
                             Model = "Toyota Camry",
-                            Year = 2006
+                            Year = 0
                         },
                         new
                         {
@@ -126,7 +129,7 @@ namespace DriversManagement.API.Migrations
                             Engine = "I4",
                             FuelCapacity = 0,
                             Model = "Honda Accord",
-                            Year = 2008
+                            Year = 0
                         });
                 });
 

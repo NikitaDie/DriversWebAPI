@@ -4,6 +4,7 @@ using DriversManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriversManagement.API.Migrations
 {
     [DbContext(typeof(DriversContext))]
-    partial class DriversContextModelSnapshot : ModelSnapshot
+    [Migration("20241103173111_DriverTable")]
+    partial class DriverTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,26 +59,6 @@ namespace DriversManagement.API.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Drivers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "John",
-                            LastName = "Doe",
-                            Salary = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 2,
-                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            Salary = 0
-                        });
                 });
 
             modelBuilder.Entity("DriversManagement.API.Models.Vehicle", b =>
@@ -108,26 +91,6 @@ namespace DriversManagement.API.Migrations
                     b.HasIndex("DriverId");
 
                     b.ToTable("Vehicles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DriverId = 1,
-                            Engine = "V6",
-                            FuelCapacity = 0,
-                            Model = "Toyota Camry",
-                            Year = 2006
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DriverId = 2,
-                            Engine = "I4",
-                            FuelCapacity = 0,
-                            Model = "Honda Accord",
-                            Year = 2008
-                        });
                 });
 
             modelBuilder.Entity("DriversManagement.API.Models.VehicleCategory", b =>
@@ -151,22 +114,6 @@ namespace DriversManagement.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Age = 0,
-                            Mass = 0,
-                            Symbol = "Sedan"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Age = 0,
-                            Mass = 0,
-                            Symbol = "SUV"
-                        });
                 });
 
             modelBuilder.Entity("DriversManagement.API.Models.Driver", b =>
